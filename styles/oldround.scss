@@ -10,12 +10,16 @@
 .oldround-quickstats {
   width: 100%;
   background: #80bf5c;
+  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.oldround-quickstats h3 {
+.oldround-quickstats h3, .oldround-container img {
   margin: 10px;
+}
+.oldround-quickstats img {
+  width: 36px;
 }
 .quickstats-score {
   font-size: 24px;

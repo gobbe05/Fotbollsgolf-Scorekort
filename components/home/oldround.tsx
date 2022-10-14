@@ -20,7 +20,10 @@ const OldRound: FC<props> = (props): JSX.Element => {
             <h3 className={"quickstats-score"}>{props.score}</h3>
           </div>
           <div>
-            <h3 className={"quickstats-playedholes"}>Played holes {props.playedHoles}</h3>
+            <h3 className={"quickstats-playedholes"}>Spelade hål {props.playedHoles}</h3>
+          </div>
+          <div>
+            <img src="https://img.icons8.com/ios-filled/50/FFFFFF/expand-arrow--v1.png"/>
           </div>
         </div>
         <div className="oldround-scorecard">

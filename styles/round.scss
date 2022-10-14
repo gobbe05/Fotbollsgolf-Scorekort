@@ -1,0 +1,31 @@
+.activehole-container {
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+}
+.incrementhole-button {
+    text-align: center;
+    background-color: #80bf5c;
+    border-radius: 24px;
+    height: 48px;
+    width: 48px;
+    padding: 10px;
+    margin: 10px;
+}
+.activehole-information {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.currenthole {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #80bf5c;
+    border-radius: 32px;
+    height: 64px;
+    width: 64px;
+    padding: 10px;
+    margin: 10px;
+}
