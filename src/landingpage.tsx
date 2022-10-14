@@ -5,7 +5,6 @@ export default function Landingpage() {
   const oldRounds = [
     {
       score: 20,
-      totalHoles: 9,
       playedHoles: 5,
       holes: [2,2,2,2,2]
     }

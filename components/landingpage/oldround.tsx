@@ -3,7 +3,6 @@ import '../../styles/oldround.scss'
 
 interface props {
   score: number,
-  totalHoles: number,
   playedHoles: number,
   holes: Array<number>
 }
@@ -16,12 +15,13 @@ const OldRound: FC<props> = (props): JSX.Element => {
     <>
       <div className={scoreCardHidden ? "oldround-container scorecard-hidden" : "oldround-container"} onClick={() => setScoreCardHidden(!scoreCardHidden)}>
 
-        <div className={"score"}>
-          <h1>{props.score}</h1>
-        </div>
-        <div>
-          <h3>{props.totalHoles}</h3>
-          <h3>{props.playedHoles}</h3>
+        <div className={"oldround-quickstats"}>
+          <div className={"score"}>
+            <h3 className={"quickstats-score"}>{props.score}</h3>
+          </div>
+          <div>
+            <h3 className={"quickstats-playedholes"}>Played holes {props.playedHoles}</h3>
+          </div>
         </div>
         <div className="oldround-scorecard">
 
