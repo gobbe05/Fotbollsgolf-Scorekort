@@ -1,55 +1,88 @@
-import ActiveHole from '../../components/round/ActiveHole'
-import '../../styles/round.scss'
-import { useState, useEffect, FC } from 'react'
+import { onAuthStateChanged } from "firebase/auth"
+import { FC, useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
+import { auth, db } from "../firebase"
+import {doc, onSnapshot } from 'firebase/firestore'
+import edit from "../utils/edit"
 
+const Round: FC = () => {
+    const {roundId} = useParams()
 
-const activeRound =
-    {
-      score: 20,
-      activeHole: 5,
-      holes: [2,2,2,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    }
+    //Object
+    const [round, setRound]: any = useState()
+    const [objRounds, setObjRounds]: any = useState()
+    const [objEmail, setObjEmail] = useState("")
 
-const Round: FC = (): JSX.Element => {
-    const [activeHole, setActiveHole] = useState(activeRound.activeHole)
-    const [ActiveHoleObj, setActiveHoleObj] = useState({
-        activeHole: 0,
-        currentHoleScore: 0,
-        currentHoleInfo: ""
-    })
-    const [loaded, setLoaded] = useState(false)
+    const [userId, setUserId] = useState("")
+    const [userLoaded, setUserLoaded] = useState(false)
+    const [roundLoaded, setRoundLoaded] = useState(false)
 
-    useEffect(() => {
-        console.log("Effect ran")
-        fetch("https://fpgscore.fredricpersson2.repl.co/info.json")
-            .then(res => res.json())
-            .then(data => {
-                const currentHole = activeHole
-                setActiveHoleObj({
-                    activeHole: currentHole,
-                    currentHoleScore: activeRound.holes[currentHole],
-                    currentHoleInfo: data.court[currentHole].info
-                })})
-            .then(()=> {
-                
+    const [activeHole, setActiveHole] = useState(0)
+    const [score, setScore] = useState(0)
+    const [holes, setHoles]: any = useState()
+
+      useEffect(() => {
+        onAuthStateChanged(auth, (currentUser: any) => {
+          setUserId(currentUser.uid)
+          setUserLoaded(true)
+        });
+      }, [])
+
+      useEffect(() => {
+        if(userLoaded) {
+            return onSnapshot(doc(db, "users", userId), (doc: any) => {
+                const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
+                setObjRounds(doc.data().rounds)
+                setObjEmail(doc.data().email)
+                doc.data().rounds.map((round: any) => {
+                    if(round.roundId == roundId) {
+                        setRound(round)
+                        setActiveHole(round.activeHole)
+                        setScore(round.score)
+                        setHoles(round.holes)
+                        let tempScore: number = 0
+                        round.holes.forEach((holeScore:number) => {
+                            tempScore += holeScore
+                        })
+                        setScore(tempScore)
+                        setRoundLoaded(true)
+                    }
+                })
             })
-        console.log(loaded)
-    }, [activeHole])
 
-    
-    const left = "<"
-    const right = ">"
+        }
+      }, [userLoaded])
+
+
     return (
+        
         <>
-        <div className={"activehole-container"}>
-            <button className={"incrementhole-button"} onClick={() => setActiveHole(activeHole-1)}>{left}</button>
-            <ActiveHole {...ActiveHoleObj} />
-            <button className={"incrementhole-button"} onClick={() => setActiveHole(activeHole+1)}>{right}</button>
+        <div>
+            <button onClick={() => {if(activeHole != 1) edit(objEmail, [{activeHole: activeHole-1, holes:holes, score: score, roundId: roundId}], userId)}}>-</button>
+        
+                {roundLoaded ? <h1>{activeHole}</h1> : null}
+
+            <button onClick={() => {if(activeHole != 18) {edit(objEmail, [{activeHole: activeHole+1, holes:holes, score: score, roundId: roundId}], userId)}}}>+</button>
         </div>
-        
-        
+        <div>
+            <button onClick={() => {if(activeHole != 1) {
+                const tempHoleScore = holes
+                tempHoleScore[activeHole-1] = tempHoleScore[activeHole-1] - 1
+                edit(objEmail, [{activeHole: activeHole, holes:tempHoleScore, score: score-1, roundId: roundId}], userId)}}}>-</button>
+
+                {roundLoaded ? <h1>{round.holes[activeHole-1]}</h1> : null}
+
+            <button onClick={() => {if(activeHole != 18) {
+                const tempHoleScore = holes
+                tempHoleScore[activeHole-1] = tempHoleScore[activeHole-1] + 1
+                edit(objEmail, [{activeHole: activeHole, holes:tempHoleScore, score: score+1, roundId: roundId}], userId)}}}>+</button>
+        </div>
+        <div>
+            {score}
+        </div>
+
         </>
-    )
+        )
 }
 
 export default Round

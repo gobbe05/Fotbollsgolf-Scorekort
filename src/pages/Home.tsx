@@ -1,21 +1,35 @@
+import { onAuthStateChanged } from 'firebase/auth'
+import { useEffect, useState } from 'react'
 import '../../styles/header.scss'
 import '../../styles/landingpage.scss'
-import OldRound from '../../components/home/oldround'
+import {auth} from '../firebase'
+import OldRound from '../components/Home/oldround'
+import getUserData from '../utils/getUserData'
 
 export default function Landingpage() {
-  const oldRounds = [
-    {
-      score: 20,
-      playedHoles: 5,
-      holes: [2,2,2,2,2]
-    },
-    {
-      score: 20,
-      playedHoles: 5,
-      holes: [2,2,2,2,2]
+  const [oldRounds, setOldRounds] = useState([{score: 0,activeHole: 0, holes:[], roundId: 0}])
+  const [loaded, setLoaded] = useState(false)
+  const [user, setUser] = useState()
+  const [userLoaded, setUserLoaded] = useState(false)
+  const [userId, setUserId] = useState("")
+  const getData: any = async () => {
+    const data: any = await getUserData(userId)
+    setOldRounds(data.rounds)
+    setLoaded(true)
+  }
+  useEffect(() => {
+    onAuthStateChanged(auth, (currentUser: any) => {
+      setUser(currentUser);
+      setUserId(currentUser.uid)
+      setUserLoaded(true)
+    });
+  }, [])
+  useEffect(() => {
+    if(userLoaded) {
+      getData()
     }
-  ]
-
+  }, [userLoaded])
+  
   return (
     <>
       <div>
@@ -28,6 +42,7 @@ export default function Landingpage() {
 
         <h3>Gamla rundor</h3>
 
+        {loaded ? <div>
         {
           oldRounds.map((round) => {
             return (
@@ -37,6 +52,7 @@ export default function Landingpage() {
             )
           })
         }
+        </div> : <></>}
 
       </div>
     </>
