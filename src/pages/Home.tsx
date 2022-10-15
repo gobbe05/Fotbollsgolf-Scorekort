@@ -34,9 +34,9 @@ export default function Landingpage() {
     <>
       <div>
         <div>
-          <div className={"playnewround"}>
-            <img src="https://img.icons8.com/sf-regular-filled/96/FFFFFF/play.png"/>
-            <h3>Starta ny runda</h3>
+            <div className={"playnewround"}>
+              <img src="https://img.icons8.com/sf-regular-filled/96/FFFFFF/play.png"/>
+              <h3>Starta ny runda</h3>
           </div>
         </div>
 
