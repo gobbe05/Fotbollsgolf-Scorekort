@@ -3,14 +3,17 @@ import {useEffect, useState} from 'react'
 import {Form, Button, Card, Alert, Container} from 'react-bootstrap'
 import {Link, Navigate} from 'react-router-dom'
 
+import '../../styles/login.scss'
 
 import {
     browserLocalPersistence,
     onAuthStateChanged,
     setPersistence,
+    signInAnonymously,
     signInWithEmailAndPassword,
   } from "firebase/auth"
   import {auth} from '../firebase'
+    import upload from '../utils/upload'
 
 const Login:FC = () => {
     const [emailValue, setEmailValue] = useState("")
@@ -24,8 +27,12 @@ const Login:FC = () => {
     
     useEffect(() => {
         onAuthStateChanged(auth, (currentUser: any) => {
+            console.log()
             if(currentUser == undefined) {
 
+            }else if(currentUser.providerData.length == 0) {
+                upload("", currentUser.uid)
+                setLoggedIn(true)
             }else {
                 setUser(currentUser)
                 setLoggedIn(true)
@@ -39,6 +46,14 @@ const Login:FC = () => {
             const user = await signInWithEmailAndPassword(auth, emailValue, passwordValue)
             setTryLogin(true)
         } catch(err: any) {
+            console.error(err.message)
+        }
+    }
+    const loginAnon = async () => {
+        try {
+            await setPersistence(auth, browserLocalPersistence)
+            alert(signInAnonymously(auth))
+        } catch (err: any) {
             console.error(err.message)
         }
     }
@@ -63,12 +78,15 @@ const Login:FC = () => {
                             <Form.Label>Password</Form.Label>
                             <Form.Control type="password" onChange={(e: any) => {setPasswordValue(e.target.value)}} required/>
                         </Form.Group>
-                        <Button className="w-100" onClick={login}>Submit</Button>
+                        <Button className="w-100 mt-2 submitbutton" onClick={login}>Submit</Button>
                     </Form>
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
                 Don't have an account? <Link to={'/signup'}>Sign up</Link>
+            </div>
+            <div className={"loginguest"}>
+                <p onClick={loginAnon}>Log in as a <b >Guest</b></p>
             </div>
             </div>
         </Container>

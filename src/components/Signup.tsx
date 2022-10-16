@@ -10,6 +10,7 @@ import {
   } from "firebase/auth";
   import {auth} from '../firebase'
   import UploadUser from '../utils/upload'
+  import '../../styles/login.scss'
 
 
 export default function Signup() {
@@ -69,7 +70,7 @@ export default function Signup() {
                             <Form.Label>Password Confirmation</Form.Label>
                             <Form.Control type="password" onChange={(e: any) => {setConfirmPasswordValue(e.target.value)}} required/>
                         </Form.Group>
-                        <Button className="w-100" onClick={signup}>Submit</Button>
+                        <Button className="w-100 submitbutton" onClick={signup}>Submit</Button>
                     </Form>
                 </Card.Body>
             </Card>
