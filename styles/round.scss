@@ -1,0 +1,43 @@
+.score {
+    margin: auto;
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 128px;
+    width: 128px;
+    font-size: 64px;
+    background-color: red;
+    color: white;
+    border-radius: 64px;
+}
+.activehole, .slag {
+    margin: 25px;
+    font-size: 28px;
+    font-weight:lighter;
+    text-align: center;
+}
+.slag {
+    margin-top: 50px;
+}
+.activehole-container, .activescore-container {
+    margin: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.activehole-container button, .activescore-container button {
+    background-color: #80bf5c;
+    height: 64px;
+    width: 64px;
+
+    border-radius: 32px;
+    border: none;
+}
+
+.activescore-container {
+    flex-direction: column;
+}
+.instructions-container {
+    text-align: center;
+}

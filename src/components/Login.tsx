@@ -1,7 +1,7 @@
 import {FC} from 'react'
 import {useEffect, useState} from 'react'
 import {Form, Button, Card, Alert, Container} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import {Link, Navigate} from 'react-router-dom'
 
 
 import {
@@ -20,10 +20,12 @@ const Login:FC = () => {
 
     const [error, setError] = useState("")
     const [tryLogin, setTryLogin] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(false)
     
     useEffect(() => {
         onAuthStateChanged(auth, (currentUser: any) => {
             setUser(currentUser)
+            setLoggedIn(true)
         })
     }, [tryLogin])
 
@@ -39,6 +41,7 @@ const Login:FC = () => {
 
     return (
     <>
+    {loggedIn ? <Navigate to={"/"}/> : <></>}
 <Container className="d-flex align-items-center justify-content-center" style={ {minHeight: "100vh"} }>
           <div className="w-100" style={  {maxWidth: "400px"} }>
          

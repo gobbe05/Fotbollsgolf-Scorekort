@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Form, Button, Card, Alert, Container} from 'react-bootstrap'
-import {Link} from 'react-router-dom'
+import {Link, Navigate} from 'react-router-dom'
 
 import {
     createUserWithEmailAndPassword,
@@ -18,12 +18,14 @@ export default function Signup() {
     const [confirmPasswordValue, setConfirmPasswordValue] = useState()
     const [error, setError] = useState('')
     const [signUp, setSignUp] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(false)
 
     const [user, setUser]: any = useState({uid: "none"})
     
     useEffect(() => {
         onAuthStateChanged(auth, (currentUser: any) => {
             setUser(currentUser);
+            setLoggedIn(true)
           });
 
           
@@ -41,6 +43,7 @@ export default function Signup() {
 
     return (
         <>
+        {loggedIn ? <Navigate to={'/'} /> : null}
 <Container className="d-flex align-items-center justify-content-center" style={ {minHeight: "100vh"} }>
           <div className="w-100" style={  {maxWidth: "400px"} }>
             

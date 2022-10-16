@@ -3,6 +3,8 @@ import { FC, useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import { auth, db } from "../firebase"
 import {doc, onSnapshot } from 'firebase/firestore'
+import '../../styles/oldround.scss'
+import '../../styles/round.scss'
 import edit from "../utils/edit"
 
 const Round: FC = () => {
@@ -10,6 +12,7 @@ const Round: FC = () => {
 
     //Object
     const [round, setRound]: any = useState()
+    const [rounds, setRounds] = useState()
     const [objRounds, setObjRounds]: any = useState()
     const [objEmail, setObjEmail] = useState("")
 
@@ -21,11 +24,31 @@ const Round: FC = () => {
     const [score, setScore] = useState(0)
     const [holes, setHoles]: any = useState()
 
+    const [courseInformation, setCourseInformaiton]: any = useState()
+    const [courseLoaded, setCourseLoaded] = useState(false)
+
       useEffect(() => {
         onAuthStateChanged(auth, (currentUser: any) => {
           setUserId(currentUser.uid)
           setUserLoaded(true)
         });
+
+        //Fetch course information
+        const url = "https://fpgscore.fredricpersson2.repl.co/info.json";
+        const fetchData = async () => {
+        try {
+            const response = await fetch(url);
+            const json = await response.json();
+            
+            console.log(courseLoaded)
+            setCourseInformaiton(json)
+            setCourseLoaded(true)
+            console.log(json)
+        } catch (error) {
+            console.log("error", error);
+        }
+        };
+        fetchData();
       }, [])
 
       useEffect(() => {
@@ -34,6 +57,7 @@ const Round: FC = () => {
                 const source = doc.metadata.hasPendingWrites ? "Local" : "Server";
                 setObjRounds(doc.data().rounds)
                 setObjEmail(doc.data().email)
+                setRounds(doc.data().rounds)
                 doc.data().rounds.map((round: any) => {
                     if(round.roundId == roundId) {
                         setRound(round)
@@ -53,34 +77,102 @@ const Round: FC = () => {
         }
       }, [userLoaded])
 
+      //Change array for activeHole
+      function changeArrayAH(rounds: any, change:any) {
+        let arrIndex: any
+        rounds.map((round: any, index: any) => {
+            if(round.roundId == roundId) {
+                
+                arrIndex = index
+            }
+            rounds[arrIndex] = {activeHole: activeHole+change, holes:holes, score:score, roundId: roundId}
+
+        })
+        return rounds
+      }
+      //Change array for score
+      function changeArrayS(rounds: any, change:any, activeHole: any) {
+        let arrIndex: any
+        rounds.map((round: any, index: any) => {
+            if(round.roundId == roundId) {
+                arrIndex = index
+            }
+        })
+        if(arrIndex != undefined) {
+            rounds[arrIndex].holes[activeHole-1] = rounds[arrIndex].holes[activeHole-1] + change
+        }
+        console.log(activeHole)
+        return rounds
+      }
 
     return (
         
         <>
-        <div>
-            <button onClick={() => {if(activeHole != 1) edit(objEmail, [{activeHole: activeHole-1, holes:holes, score: score, roundId: roundId}], userId)}}>-</button>
+        <div className={"score"}>
+            {score}
+        </div>
+        <div className={"activehole"}>Nuvarande hål</div>
+        <div className={"activehole-container"}>
+            <button onClick={() => {if(activeHole != 1) edit(objEmail, changeArrayAH(rounds, -1), userId)}}><h2>{"<"}</h2></button>
         
                 {roundLoaded ? <h1>{activeHole}</h1> : null}
 
-            <button onClick={() => {if(activeHole != 18) {edit(objEmail, [{activeHole: activeHole+1, holes:holes, score: score, roundId: roundId}], userId)}}}>+</button>
+            <button onClick={() => {if(activeHole != 18) {edit(objEmail, changeArrayAH(rounds, 1), userId)}}}><h2>{">"}</h2></button>
         </div>
-        <div>
+        <div className={"instructions-container"}>
+            <h3>Instruktioner</h3>
+            {courseLoaded && roundLoaded ? <>{courseInformation.court[activeHole-1].info}</> : null}
+        </div>
+        <div className={"slag"}>Slag</div>
+        <div className={"activescore-container"}>
             <button onClick={() => {if(activeHole != 1) {
-                const tempHoleScore = holes
-                tempHoleScore[activeHole-1] = tempHoleScore[activeHole-1] - 1
-                edit(objEmail, [{activeHole: activeHole, holes:tempHoleScore, score: score-1, roundId: roundId}], userId)}}}>-</button>
+                edit(objEmail, changeArrayS(rounds, -1, activeHole), userId)}}}>-</button>
 
                 {roundLoaded ? <h1>{round.holes[activeHole-1]}</h1> : null}
 
             <button onClick={() => {if(activeHole != 18) {
-                const tempHoleScore = holes
-                tempHoleScore[activeHole-1] = tempHoleScore[activeHole-1] + 1
-                edit(objEmail, [{activeHole: activeHole, holes:tempHoleScore, score: score+1, roundId: roundId}], userId)}}}>+</button>
+                edit(objEmail, changeArrayS(rounds, 1, activeHole), userId)}}}>+</button>
         </div>
-        <div>
-            {score}
-        </div>
+        
+        <h1 className={"scorekort-titel"}>Scorekort</h1>
+        <div className="oldround-scorecard">  
+        {roundLoaded && courseLoaded ? round.holes.map((score: any, index: any) => {
+            let parName = ""
+            if(courseLoaded) {
+              const parDifference = score - courseInformation.court[index].par
+            
+            if(parDifference >= 2) {
+              parName = "doublebogey"
+            }
+            if(parDifference == 1) {
+              parName = "bogey"
+            }
+            if(parDifference == 0) {
+              parName = "par"
+            }
+            if(parDifference == -1) {
+              parName = "birdie"
+            }
+            if(parDifference <= -2) {
+              parName = "eagle"
+            }
+            if(parDifference == -courseInformation.court[index].par) {
+              parName = "none"
+            }
+            }
+            return (
+              <>
+                <div>
 
+                  <div className={"scorecard-holenumber scorecard-box"}><b>{index+1}</b></div>
+                  {courseLoaded ? <div className={"scorecard-par scorecard-box"}><h6>{courseInformation.court[index].par}</h6></div> : <></>}
+                  <div className={"scorecard-holescore scorecard-box " + parName}><h6>{score}</h6></div>
+
+                </div>
+              </>
+            )
+          }): <></>}
+            </div>  
         </>
         )
 }

@@ -35,15 +35,64 @@
   border-radius: 24px;
 }
 .scorecard-box {
-  border: 0.5px solid rgb(187, 187, 187);
+  background-color: #efefef;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 10vw;
+  height: 10vw;
+  border-bottom: 1px solid rgb(212, 212, 212);
+}
+.scorecard-box h6 {
+  margin: 0;
 }
 .resumeround {
   margin: auto;
   margin-top: 10px;
+  margin-bottom: 10px;
   color: white;
   text-decoration: none;
   background-color: #80bf5c;
   padding: 10px;
   border-radius: 10px;
+}
+.scorecard-holescore {
+  width: 9vw;
+  height: 9vw;
+  margin-bottom: 25px !important;
+}
+.doublebogey, .bogey, .par, .birdie, .eagle, .none {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: none;
+  color: white;
+}
+.doublebogey {
+  background-color: rgb(0, 85, 189);
+}
+.bogey {
+  background-color: rgb(0, 142, 189);
+}
+.par {
+  background-color: white;
+}
+.par, .eagle {
+  color: black;
+}
+.birdie {
+  background-color: rgb(252, 68, 68);
+  border-radius: 10vw;
+}
+.eagle {
+  background-color: #fff870;
+  border-radius: 10vw;
+}
+.none {
+  background-color: white;
+  border: none;
+  color: black;
+}
+
+.scorekort-titel {
+  text-align: center;
 }
