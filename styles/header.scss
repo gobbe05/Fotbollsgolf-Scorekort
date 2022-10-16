@@ -29,6 +29,7 @@
 }
 
 .sidemenu {
+  
   transition: .5s;
   background-color: #80bf5c;
   position: fixed;
@@ -36,6 +37,10 @@
   left: 0;
   width: 100vw;
   height: 100vh;
+}
+.sidemenu-top {
+  display: flex;
+  align-items: center;
 }
 .sidemenu-hamburger-container {
   margin: 25px;
@@ -50,4 +55,8 @@
 }
 .hide {
   left: 100vw;
+}
+.username {
+  text-align: center;
+  color: white;
 }
