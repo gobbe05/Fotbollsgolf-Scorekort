@@ -99,9 +99,11 @@ const Round: FC = () => {
             }
         })
         if(arrIndex != undefined) {
+            
             rounds[arrIndex].holes[activeHole-1] = rounds[arrIndex].holes[activeHole-1] + change
         }
         console.log(activeHole)
+        console.log("c")
         return rounds
       }
 
@@ -125,12 +127,12 @@ const Round: FC = () => {
         </div>
         <div className={"slag"}>Slag</div>
         <div className={"activescore-container"}>
-            <button onClick={() => {if(activeHole != 1) {
+            <button onClick={() => {if(activeHole != 0) {
                 edit(objEmail, changeArrayS(rounds, -1, activeHole), userId)}}}>-</button>
 
                 {roundLoaded ? <h1>{round.holes[activeHole-1]}</h1> : null}
 
-            <button onClick={() => {if(activeHole != 18) {
+            <button onClick={() => {if(activeHole != 19) {
                 edit(objEmail, changeArrayS(rounds, 1, activeHole), userId)}}}>+</button>
         </div>
         
