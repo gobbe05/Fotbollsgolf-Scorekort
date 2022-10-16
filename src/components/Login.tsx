@@ -24,8 +24,12 @@ const Login:FC = () => {
     
     useEffect(() => {
         onAuthStateChanged(auth, (currentUser: any) => {
-            setUser(currentUser)
-            setLoggedIn(true)
+            if(currentUser == undefined) {
+
+            }else {
+                setUser(currentUser)
+                setLoggedIn(true)
+            }
         })
     }, [tryLogin])
 

@@ -29,9 +29,12 @@ export default function Landingpage() {
       if (currentUser == undefined) {
         setUserNotLoggedIn(true)
       }
-      setUser(currentUser);
-      setUserId(currentUser.uid)
-      setUserLoaded(true)
+      else {
+        setUser(currentUser);
+        setUserId(currentUser.uid)
+        setUserLoaded(true)
+      }
+      
     });
   }, [])
   useEffect(() => {
