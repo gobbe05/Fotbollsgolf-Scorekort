@@ -24,6 +24,7 @@ const Login:FC = () => {
     const [error, setError] = useState("")
     const [tryLogin, setTryLogin] = useState(false)
     const [loggedIn, setLoggedIn] = useState(false)
+    const [anonLogin, setAnonLogin] = useState(false)
     
     useEffect(() => {
         onAuthStateChanged(auth, (currentUser: any) => {
@@ -32,7 +33,6 @@ const Login:FC = () => {
 
             }else if(currentUser.providerData.length == 0) {
                 upload("", currentUser.uid)
-                setLoggedIn(true)
             }else {
                 setUser(currentUser)
                 setLoggedIn(true)
@@ -52,7 +52,8 @@ const Login:FC = () => {
     const loginAnon = async () => {
         try {
             await setPersistence(auth, browserLocalPersistence)
-            alert(signInAnonymously(auth))
+            await signInAnonymously(auth)
+            await setAnonLogin(true)
         } catch (err: any) {
             console.error(err.message)
         }
@@ -60,13 +61,13 @@ const Login:FC = () => {
 
     return (
     <>
-    {loggedIn ? <Navigate to={"/"}/> : <></>}
+    {loggedIn || anonLogin ? <Navigate to={"/"}/> : <></>}
 <Container className="d-flex align-items-center justify-content-center" style={ {minHeight: "100vh"} }>
           <div className="w-100" style={  {maxWidth: "400px"} }>
          
             <Card>
                 <Card.Body>
-                    <h2 className="text-center mb-4">Login</h2>
+                    <h2 className="text-center mb-4">Logga in</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
                    
                     <Form onSubmit={(e:any) => {e.preventDefault()}}>
@@ -75,18 +76,18 @@ const Login:FC = () => {
                             <Form.Control type="email" onChange={(e: any) => {setEmailValue(e.target.value)}} required/>
                         </Form.Group>
                         <Form.Group id="password">
-                            <Form.Label>Password</Form.Label>
+                            <Form.Label>Lösenord</Form.Label>
                             <Form.Control type="password" onChange={(e: any) => {setPasswordValue(e.target.value)}} required/>
                         </Form.Group>
-                        <Button className="w-100 mt-2 submitbutton" onClick={login}>Submit</Button>
+                        <Button className="w-100 mt-2 submitbutton" onClick={login}>Logga in</Button>
                     </Form>
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
-                Don't have an account? <Link to={'/signup'}>Sign up</Link>
+                Har du inte ett konto? <Link to={'/signup'}>Skapa ett konto</Link>
             </div>
             <div className={"loginguest"}>
-                <p onClick={loginAnon}>Log in as a <b >Guest</b></p>
+                <p onClick={loginAnon}>Logga in som <b >Gäst</b></p>
             </div>
             </div>
         </Container>

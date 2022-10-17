@@ -26,7 +26,9 @@ export default function Signup() {
     useEffect(() => {
         onAuthStateChanged(auth, (currentUser: any) => {
             if(currentUser == undefined) {
-
+                
+            }else if(currentUser.providerData.length == 0) {
+                
             } else {
                 setUser(currentUser);
                 setLoggedIn(true)
@@ -54,7 +56,7 @@ export default function Signup() {
             
             <Card>
                 <Card.Body>
-                    <h2 className="text-center mb-4">Signup</h2>
+                    <h2 className="text-center mb-4">Skapa konto</h2>
                     {error && <Alert variant="danger">{error}</Alert>}
                    
                     <Form onSubmit={(e:any) => {e.preventDefault()}}>
@@ -63,19 +65,19 @@ export default function Signup() {
                             <Form.Control type="email" onChange={(e: any) => {setEmailValue(e.target.value)}} required/>
                         </Form.Group>
                         <Form.Group id="password">
-                            <Form.Label>Password</Form.Label>
+                            <Form.Label>Lösenord</Form.Label>
                             <Form.Control type="password" onChange={(e: any) => {setPasswordValue(e.target.value)}} required/>
                         </Form.Group>
                         <Form.Group id="password-confirm">
-                            <Form.Label>Password Confirmation</Form.Label>
+                            <Form.Label>Bekräfta Lösenord</Form.Label>
                             <Form.Control type="password" onChange={(e: any) => {setConfirmPasswordValue(e.target.value)}} required/>
                         </Form.Group>
-                        <Button className="w-100 submitbutton" onClick={signup}>Submit</Button>
+                        <Button className="w-100 submitbutton mt-2" onClick={signup}>Skapa konto</Button>
                     </Form>
                 </Card.Body>
             </Card>
             <div className="w-100 text-center mt-2">
-                Already have an account? <Link to={'/login'}>Log in</Link>
+                Har du redan ett konto? <Link to={'/login'}>Logga in</Link>
             </div>
             </div>
         </Container>

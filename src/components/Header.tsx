@@ -50,8 +50,8 @@ export default function Header() {
 <h3 className={"username"}>{username}</h3>
         </div>
 
-        <div>
-          <h3>Logout</h3>
+        <div className='listitems'>
+          {username == undefined ? <><Link to={"/login"}><h3>Login</h3></Link><Link to={"/signup"}><h3>Skapa konto</h3></Link></> : <h3 onClick={() => {auth.signOut(); setSideMenuHide(false)}}>Logga ut</h3>}
           <h3>Leaderbord</h3>
         </div>
 
