@@ -12,7 +12,7 @@ export default function Header() {
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser: any) => {
         if(currentUser == undefined) {
-
+          setUsername("guest")
         } else {
             setUsername(currentUser.email);
         }
